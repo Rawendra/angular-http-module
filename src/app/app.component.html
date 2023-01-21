@@ -49,9 +49,19 @@
       </button>
     </div>
   </div>
+
   <div class="row">
-    <div class="col-xs-12 col-md-6 col-md-offset-3">
-      <p>No posts available!</p>
+    <div *ngIf="!isLoading" class="col-xs-12 col-md-6 col-md-offset-3">
+      <p *ngIf="loadedPosts.length == 0">No posts available!</p>
+      <div *ngIf="loadedPosts.length > 0">
+        <ul class="list-group">
+          <li class="list-group-item" *ngFor="let post of loadedPosts">
+            <h1>{{ post.title }}</h1>
+            {{ post.content }}
+          </li>
+        </ul>
+      </div>
     </div>
+    <div *ngIf="isLoading" class="loader"></div>
   </div>
 </div>
