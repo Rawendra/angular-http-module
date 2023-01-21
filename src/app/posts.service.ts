@@ -15,6 +15,7 @@ export class PostService {
     const obs = this.http.delete(postUrl);
     return obs;
   }
+  
   fetchPost() {
     const observable = this.http
       .get<{ [key: string]: Post }>(postUrl) //type declaration for return type of method

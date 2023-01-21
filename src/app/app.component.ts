@@ -11,6 +11,8 @@ import { PostService } from "./posts.service";
 export class AppComponent implements OnInit {
   loadedPosts: Post[] = []; //type declaration for array
   isLoading = false;
+  isError = false;
+  error;
   url = "https://angular-app-service-default-rtdb.firebaseio.com/posts.json";
 
   constructor(private http: HttpClient, private postService: PostService) {}
@@ -42,9 +44,16 @@ export class AppComponent implements OnInit {
 
   private fetchAllPosts() {
     this.isLoading = true;
-    this.postService.fetchPost().subscribe((response) => {
-      this.loadedPosts = response;
-      this.isLoading = false;
-    });
+    this.postService.fetchPost().subscribe(
+      (response) => {
+        this.loadedPosts = response;
+        this.isLoading = false;
+      },
+      (error) => {
+        console.log("error is occurred-->", error);
+        this.isError = true;
+        this.error = error.message;
+      }
+    );
   }
 }
