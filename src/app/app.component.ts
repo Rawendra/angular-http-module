@@ -1,14 +1,14 @@
 import { Component, OnInit } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { map } from "rxjs/operators";
-import { keyframes } from "@angular/animations";
+import { Post } from "./post.model";
 @Component({
   selector: "app-root",
   templateUrl: "./app.component.html",
   styleUrls: ["./app.component.css"],
 })
 export class AppComponent implements OnInit {
-  loadedPosts = [];
+  loadedPosts:Post[] = [];//type declaration for array
   url = "https://angular-app-service-default-rtdb.firebaseio.com/posts.json";
 
   constructor(private http: HttpClient) {}
@@ -17,10 +17,11 @@ export class AppComponent implements OnInit {
     this.fetchAllPosts();
   }
 
-  onCreatePost(postData: { title: string; content: string }) {
+  onCreatePost(postData: Post) {
     // Send Http request
     console.log(postData);
-    this.http.post(this.url, postData).subscribe((response) => {
+    //type declaration for return type of method
+    this.http.post<{name:string}>(this.url, postData).subscribe((response) => {
       console.log(response);
     });
   }
@@ -34,14 +35,12 @@ export class AppComponent implements OnInit {
   }
   private fetchAllPosts() {
     this.http
-      .get(this.url)
+      .get<{[key:string]:Post}>(this.url)//type declaration for return type of method
       .pipe(
-        map((response) => {
- 
-
+        map((response: { [key: string]: Post }) => {
           const result = Object.entries(response).reduce((acc, crr) => {
             acc.push({ id: crr[0], ...crr[1] });
-            return acc
+            return acc;
           }, []);
 
           return result;
