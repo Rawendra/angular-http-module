@@ -1,6 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
-import { map } from "rxjs/operators";
+
 import { Post } from "./post.model";
 import { PostService } from "./posts.service";
 @Component({
@@ -22,13 +22,7 @@ export class AppComponent implements OnInit {
   onCreatePost(postData: Post) {
     // Send Http request
     console.log(postData);
-    this.postService.createPost(postData)
-    //type declaration for return type of method
-    // this.http
-    //   .post<{ name: string }>(this.url, postData)
-    //   .subscribe((response) => {
-    //     console.log(response);
-    //   });
+    this.postService.createPost(postData);
   }
 
   onFetchPosts() {
@@ -40,23 +34,9 @@ export class AppComponent implements OnInit {
   }
   private fetchAllPosts() {
     this.isLoading = true;
-
-    this.http
-      .get<{ [key: string]: Post }>(this.url) //type declaration for return type of method
-      .pipe(
-        map((response: { [key: string]: Post }) => {
-          const result = Object.entries(response).reduce((acc, crr) => {
-            acc.push({ id: crr[0], ...crr[1] });
-            return acc;
-          }, []);
-
-          return result;
-        })
-      )
-      .subscribe((response) => {
-        console.log(response);
-        this.loadedPosts = response;
-        this.isLoading = false;
-      });
+    this.postService.fetchPost().subscribe((response) => {
+      this.loadedPosts = response;
+      this.isLoading = false;
+    });
   }
 }
